@@ -1,4 +1,5 @@
 import numpy as np
+import pygame
 
 ROW_COUNT = 6
 COLUMN_COUNT = 7
@@ -23,17 +24,44 @@ def print_board(board):
 
 def winning_move(board, piece):
     # Check horizontal locations for win
-    for c in range(COLUMN_COUNT):
+    for c in range(COLUMN_COUNT-3):
         for r in range(ROW_COUNT):
             if board[r][c] == piece and board[r][c+1] == piece and board[r][c+2] == piece and board[r][c+3] == piece:
                 return True
     
     # Check vertical locations for win
+    for c in range(COLUMN_COUNT):
+        for r in range(ROW_COUNT-3):
+            if board[r][c] == piece and board[r+1][c] == piece and board[r+2][c] == piece and board[r+3][c] == piece:
+                return True
+    
+    # Check antidiagonals
+    for c in range(COLUMN_COUNT-3):
+        for r in range(ROW_COUNT-3):
+            if board[r][c] == piece and board[r+1][c+1] == piece and board[r+2][c+2] == piece and board[r+3][c+3] == piece:
+                return True
+
+    # Check main diagonals
+    for c in range(COLUMN_COUNT-3):
+        for r in range(3, ROW_COUNT):
+            if board[r][c] == piece and board[r-1][c+1] == piece and board[r-2][c+2] == piece and board[r-3][c+3] == piece:
+                return True
 
 board = create_board()
 print_board(board)
 game_over = False
 turn = 0
+
+pygame.init()
+
+SQUARESIZE = 100
+
+width = COLUMN_COUNT * SQUARESIZE
+height = (ROW_COUNT+1) * SQUARESIZE
+
+size = (width, height)
+
+screen = pygame.display.set_mode(size)
 
 while not game_over:
     # Ask for Player 1 Input
@@ -47,6 +75,7 @@ while not game_over:
             if winning_move (board, 1):
                 print("PLAYER 1 WINS")
                 game_over = True
+                break
 
     # Ask for Player 2 Input
     else:
@@ -55,6 +84,11 @@ while not game_over:
         if is_valid_location(board, col):
             row = get_next_open_row(board, col)
             drop_piece(board, row, col, 2)
+
+            if winning_move (board, 2):
+                print("PLAYER 2 WINS")
+                game_over = True
+                break
     
     print_board(board)
     
