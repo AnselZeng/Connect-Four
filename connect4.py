@@ -1,5 +1,4 @@
 import numpy as np
-import pygame
 
 ROW_COUNT = 6
 COLUMN_COUNT = 7
@@ -23,13 +22,13 @@ def print_board(board):
     print(np.flip(board, 0))
 
 def winning_move(board, piece):
-    # Check horizontal locations for win
+    # Check horizontal
     for c in range(COLUMN_COUNT-3):
         for r in range(ROW_COUNT):
             if board[r][c] == piece and board[r][c+1] == piece and board[r][c+2] == piece and board[r][c+3] == piece:
                 return True
     
-    # Check vertical locations for win
+    # Check vertical
     for c in range(COLUMN_COUNT):
         for r in range(ROW_COUNT-3):
             if board[r][c] == piece and board[r+1][c] == piece and board[r+2][c] == piece and board[r+3][c] == piece:
@@ -51,17 +50,6 @@ board = create_board()
 print_board(board)
 game_over = False
 turn = 0
-
-pygame.init()
-
-SQUARESIZE = 100
-
-width = COLUMN_COUNT * SQUARESIZE
-height = (ROW_COUNT+1) * SQUARESIZE
-
-size = (width, height)
-
-screen = pygame.display.set_mode(size)
 
 while not game_over:
     # Ask for Player 1 Input
